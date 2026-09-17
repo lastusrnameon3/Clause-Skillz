@@ -159,7 +159,7 @@
 - All 6 SKILL.md frontmatters parse; names match directories; no undeclared `$placeholders`.
 - `credential-guard` smoke-tested on 6 payloads: literal API key **blocked**, PEM key **blocked**, prose mentioning "password" **passed**, `Get-Credential` **passed**, `$env:VAULT_TOKEN` **passed**, empty payload **passed**. All rc=0, no stderr.
 - Test caught a real defect: the PEM pattern began with `-`, so grep parsed it as options and private-key detection never fired. Fixed and retested.
-- `review-gate` verified: denies first commit of a session, passes the second.
+- `review-gate` verified: denies first commit of a session, passes the second. **This test was inadequate — see Slice 11.** It could not distinguish a working `if:` filter from an ignored one.
 - 15 Claude Code API claims verified against current docs before building. `if:` is tool-events-only, so `eod-reminder` filters in-script.
 
 ### Unresolved
@@ -177,3 +177,38 @@
 
 ### Next Slice Queued
 - Push. Then restructure the Notion domain pages to why-only.
+
+---
+
+## 2026-09-17 — Slice 11: review-gate false-positive fix
+
+Found by dogfooding — `/security-review` on this repo's own hooks. The first Bash
+command of the session was a `cat`; `review-gate` denied it with the commit message.
+
+### Built
+- `claude/hooks/review-gate.sh` rewritten: detection moved out of `settings.json` and into the script. Tokenized in awk.
+
+### Decisions + Reason
+- **The hook is now self-contained.** The old version did zero command inspection — it read only `session_id` and denied once. Correctness depended entirely on `if: "Bash(git commit *)"` in settings. When that filter is not honored, the hook denies the **first Bash command of any kind**. `if:` is kept as belt-and-braces; it is no longer load-bearing.
+- **Tokenized, not regex.** Three cases a naive pattern gets wrong: `git -C /repo commit` (flag with a value between `git` and the subcommand), `git log --grep=commit` (word present, not the subcommand), `echo git commit` (`git` present, not the command). Requires `git` to be the first token of a segment.
+- **awk, not `while read`.** The bash version silently dropped its only line: `printf '%s'` emits no trailing newline, so `read` returned non-zero and the loop body never ran. Every input passed.
+
+### Verified
+12 payloads, all correct. PASS: `cat`, `git status`, `git log --grep=commit`, `echo git commit`, `git commit-tree`, `grep -r "git commit" .`, empty. DENY: `git commit -m`, `git -C /repo commit`, `git -c user.email=… commit`, `git add -A && git commit`, `cd /r ; git commit`. Once-per-session still holds.
+
+### Lesson — the verification, not the bug
+The Slice 10 entry claimed `review-gate` was verified. That test ran the commit as the
+first Bash call of the session, so a working `if:` and an ignored `if:` produced identical
+output. The recorded verification proved nothing. **A test that cannot fail for the reason
+you care about is not a test.** Corrected in place above.
+
+Two defects in this hook reached `main` because the verification only exercised the happy
+path — the same class of gap as the subtree prefix bug, which also went unexercised for months.
+
+### Unresolved
+- Whether `if:` is honored at all by the installed client — untested, and now moot for this hook.
+- `credential-guard` has not been exercised live. Its 6-payload test was static stdin, not a real Edit/Write.
+- `session-start` and `eod-reminder` unexercised.
+
+### Next Slice Queued
+- Live-fire `credential-guard`: ask Claude Code to write a file containing a fake key; confirm the deny.
