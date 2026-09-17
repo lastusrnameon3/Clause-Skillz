@@ -16,6 +16,7 @@ Clause-Skillz/
     skills/         ← 6 invokable skills
     hooks/          ← 4 enforced lifecycle hooks
     settings.json
+    CHEATSHEET.md   ← invocation reference: what fires automatically vs what you type
   .continue/        ← ARCHIVED. Continue v2.0.0. Not maintained.
   .vscode/          ← Shared editor settings and snippets
   scripts/          ← Machine bootstrap
