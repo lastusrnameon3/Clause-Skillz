@@ -113,6 +113,8 @@ Behavior questions resolve against the files. Questions about *why* a rule exist
 rejected on the way to it, resolve against Notion. If the same sentence is in both, delete it from
 Notion.
 
+Session summaries live in Notion (subpages of the ⚙️ Clause-Skillz hub), never as `SESSION-*.md` here.
+
 `STATE.md` records what changed and why at the commit level. Notion holds the longer-form reasoning
 that outlives any single change.
 
