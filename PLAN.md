@@ -1,36 +1,36 @@
 # Clause-Skillz — Project Plan
 
-*Last updated: 2026-09-18*
+*Last updated: 2026-09-24*
 
-The standing roadmap. `STATE.md` is the slice-by-slice commit log; `SESSION-*.md` is what happened
-on a given day. This is where the whole thing is headed.
+The standing roadmap. `STATE.md` is the slice-by-slice commit log; session summaries (what happened
+on a given day) live in Notion under the ⚙️ Clause-Skillz hub. This is where the whole thing is headed.
 
 ## Current Phase
 
-Phase C. The migration off Continue is done and installed on the Mac; the corporate Windows machine
-has not been set up, and **no hook has been exercised live through the client**. Everything built so
-far is verified by static test, not by use.
+Phase C. The migration off Continue is done and installed on the Mac. Audit A1 (2026-09-23/24)
+trimmed the system: 1 hook left (`credential-guard`), no install scripts. The corporate Windows machine
+has not been set up, and **`credential-guard` has not been exercised live through the client**.
 
 ## Phases
 
 | Phase | Status | What It Covers |
 |---|---|---|
 | A — Migrate off Continue | **Done** | Continue EOL at 2.0.0. 13 rules converted `globs:` → `paths:`, 26 prompts → 6 skills, 4 hooks built, repo renamed to `Clause-Skillz`, subtree distribution retired. Slices 9–11. |
-| B — Mac install | **Done, partially verified** | `Setup-Machine.sh` run, tree copied to `~/.claude/`, `settings.json` merged preserving `theme`. `/context` lists the 5 universal rules; `/skills` lists the 6. **Hooks unverified live** — `review-gate` was the exception and it had a defect. |
-| C — Corporate Windows machine | **Not started** | Clone, `Setup-Machine.ps1`, copy to `%USERPROFILE%\.claude\`. Two known risks: hooks need bash + `jq` via Git Bash, and `~` in `settings.json` hook paths may not expand on Windows. |
+| B — Mac install | **Done, partially verified** | Global excludes set, tree copied to `~/.claude/`. `/context` lists the 5 universal rules; `/skills` lists the 6. **Re-copy needed after Slice 12** so `~/.claude/` drops the 3 removed hooks. `credential-guard` unverified live. |
+| C — Corporate Windows machine | **Not started** | Clone, run the 2 README git-config lines in Git Bash, copy rules + skills to `%USERPROFILE%\.claude\`. Hooks won't run there: managed settings block user-level hooks, so `credential-guard` is advisory only at work. Decided 2026-09-24: no workaround. |
 | D — Notion why-only restructure | **Not started** | Domain pages still restate rule bodies. They should carry *why this exists* and *what was rejected*, then link to the file. §2 of the reconciliation doc. The largest remaining piece of work. |
 
 ## Decided, Not Yet Built
 
-- **Live-fire every hook.** `credential-guard`, `session-start` and `eod-reminder` have never run through the client. Their tests were static stdin. The `review-gate` defect — a hook that denied the first Bash command of any kind — was invisible to exactly that kind of test.
+- **Live-fire `credential-guard` on the Mac.** Never run through the client; its tests were static stdin. Ask Claude Code to write a file containing a fake key and confirm the deny.
 - **Fix `CHEATSHEET.md`'s account-skill section.** It lists `terse-mode`, `session-summary`, `ste` and others as available everywhere. They are account skills: present in the desktop app, absent in Claude Code. The file needs a surface-split table.
-- **Update the Claude project instructions block.** Still says "Notion is canonical." Under the current split Notion is canonical for *intent*; the repo is canonical for *behavior*. §4 of the reconciliation doc.
-- **Clean up `POWERSHELL-COMMUNITY-REVIEWER.md`.** Still references "your Frank personas" and a v1 `config.json` block — the one file that survived the Slice 4 de-identification pass.
 
 ## Items for Later
 
 - Move `.continue/` to `archive/continue-v2.0.0/` so the repo root is unambiguous. Cosmetic.
-- Split `03-writing`: roughly half is the session-summary format, which only matters at `/eod`. Moving that half into the session-summary skill trims always-on context with no behavior loss.
+- Split `03-writing`: roughly half is the session-summary format, which only matters at `/eod`. Moving that half into the session-summary skill trims always-on context with no behavior loss. (Audit A1 finding M2 — compare against the skill's format first.)
+- Test `paths: ["**/README.md"]` for the README standard in `03-writing` (Audit A1 M3). Risk: path rules fire on read, so a brand-new README may not trigger it.
+- Quarterly audit of this repo against current Anthropic docs — next due ~2026-12.
 - Publish more of the six skills to the account if desktop-app use grows. Three are published (`challenge`, `review-lens`, `jira`); `security-review`, `userdocs` and `plainify` were held back as repo-and-terminal work.
 - Delete the 4 `[DELETE]` duplicate Notion pages — pending manual action since 2026-07-10; the API cannot trash them.
 
@@ -47,6 +47,7 @@ far is verified by static test, not by use.
 
 ## Done
 
+- **Audit A1 + Slice 12** (2026-09-24). Hooks 4 → 1, install scripts removed (2 README lines), `01-me`/`02-thinking` contradiction fixed, `00-project-context` template trimmed, dead files removed, session summary moved to Notion, project instructions block rewritten, repo git state repaired. Findings: Notion → Template System → Audit A1.
 - **Migration off Continue complete** (2026-09-17). 13 rules, 6 skills, 4 hooks, repo renamed, pushed.
 - **`17-documentation-ste.md` written and committed** (2026-09-10). Notion had described it as deployed since 2026-08-10; it had never existed.
 - **Notion reconciled** (2026-09-10). 14 pages: hub restructured into a Current / Reference / Archived index, supersession banners applied, Personas carries the full command rename table.
