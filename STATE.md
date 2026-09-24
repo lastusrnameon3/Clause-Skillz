@@ -163,8 +163,8 @@
 - 15 Claude Code API claims verified against current docs before building. `if:` is tool-events-only, so `eod-reminder` filters in-script.
 
 ### Unresolved
-- **GitHub rename not executed** — needs to be run on GitHub; existing clones then need `git remote set-url`.
-- **Slice 9 (`9e84e1a`) and this commit are unpushed.**
+- ~~GitHub rename not executed~~ — **done.** Repo is `Clause-Skillz` on GitHub.
+- ~~Slice 9 and this commit are unpushed.~~ — **done, pushed.**
 - ~~`17-documentation-ste.md` on the corporate machine~~ — **CLOSED 2026-09-11, not investigated.** Frank's call: the repo version is authoritative, use it. Whether a pre-2026-08-10 copy existed corp-side is now moot — anything there gets overwritten by the repo copy. Rejected the investigation because the only thing it could have produced was a process finding about a system being retired this week; the cost of knowing exceeded the value.
 - Notion domain pages still restate rule bodies; they should carry *why* and *what was rejected*, then link to the file.
 - `POWERSHELL-COMMUNITY-REVIEWER.md` still references "your Frank personas" and a v1 `config.json` block — survived the Slice 4 de-identification pass.
@@ -208,7 +208,32 @@ path — the same class of gap as the subtree prefix bug, which also went unexer
 ### Unresolved
 - Whether `if:` is honored at all by the installed client — untested, and now moot for this hook.
 - `credential-guard` has not been exercised live. Its 6-payload test was static stdin, not a real Edit/Write.
-- `session-start` and `eod-reminder` unexercised.
+- ~~`session-start` and `eod-reminder` unexercised.~~ — **moot.** Both removed 2026-09-24; see Slice 12.
 
 ### Next Slice Queued
 - Live-fire `credential-guard`: ask Claude Code to write a file containing a fake key; confirm the deny.
+
+---
+
+## 2026-09-24 — Slice 12: audit pass, hook cut, script cut
+
+### Built
+- Removed 3 superseded planning docs from the Claude.ai project (Notion audit H4).
+- Deleted `claude-home` staging copy — was byte-identical to this repo plus 9 stale patch/plan files; git subtree/patch handoffs through it had left this repo with stale lock files and an unfinished `git am` session, now cleared.
+- Removed hooks `session-start`, `review-gate`, `eod-reminder` (Boris's rule: delete, use without them, re-add only on repeat failure — kept `credential-guard`, the only one that blocks anything).
+- Removed `scripts/Setup-Machine.sh`/`.ps1`, `scripts/new-project-setup.sh`/`.ps1`, `POWERSHELL-COMMUNITY-REVIEWER.md` — install is now 2 commands in README, no script needed.
+- Trimmed `01-me.md` (removed line contradicting `02-thinking`'s ambiguity rule) and `00-project-context.md` (removed unfilled template section, duplicated in Notion's CLAUDE.md template).
+
+### Decisions + Reason
+- **Simplicity over scaffolding.** Frank's standing instruction: audit should find the easiest path, not just remove tokens. A setup script that runs two `git config` lines is more moving parts than the two lines themselves.
+- **Hooks are enforcement, not reminders.** Only a hook that blocks something earns the complexity. The other three duplicated things already covered by an always-loaded rule or a standing habit.
+
+### Verified
+- Not yet — `/context` and `/hooks` recheck pending next Claude Code session on the Mac.
+
+### Unresolved
+- Corp machine (Phase C, PLAN.md) still not started; `credential-guard` still never live-fired.
+- Whether corp GitLab already runs secret-detection/push-protection — check before building any hook workaround there.
+
+### Next Slice Queued
+- Live-fire `credential-guard` on the Mac; confirm `/hooks` shows only the one hook.

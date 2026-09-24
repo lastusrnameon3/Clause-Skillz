@@ -19,21 +19,27 @@ Clause-Skillz/
     CHEATSHEET.md   ← invocation reference: what fires automatically vs what you type
   .continue/        ← ARCHIVED. Continue v2.0.0. Not maintained.
   .vscode/          ← Shared editor settings and snippets
-  scripts/          ← Machine bootstrap
   STATE.md          ← Project state file (session continuity)
   BOUNDARY-DEFINITION.md
 ```
 
 ## Install — personal scope
 
+Once per machine — keeps `.claude/`, `CLAUDE.md`, `CLAUDE.local.md` out of every repo without a
+committed `.gitignore` entry (which would itself disclose the tooling):
+
 ```bash
-./scripts/Setup-Machine.sh          # or Setup-Machine.ps1 on Windows
+git config --global core.excludesfile ~/.gitignore_global
+printf '.claude/\nCLAUDE.md\nCLAUDE.local.md\n' >> ~/.gitignore_global
+```
+
+Then, on every update, copy the tree in:
+
+```bash
 cp -r claude/rules claude/skills claude/hooks claude/settings.json ~/.claude/
 ```
 
-`Setup-Machine` configures `git config --global core.excludesfile` so `.claude/`, `CLAUDE.md`, and
-`CLAUDE.local.md` are ignored in every repo — **without** a committed `.gitignore` entry, which would
-itself disclose the tooling. Run it once per machine; it is idempotent.
+Git Bash covers both lines on Windows.
 
 Verify: `/context` in any repo lists the five universal rules under **Memory files**. Open a `.ps1`
 and `10-code` appears; open a `.md` and it does not.
@@ -77,21 +83,24 @@ work appears. Everything else is a deliberate invocation.
 Not rebuilt here — already installed as Claude skills: terse-mode · context-compress · usage-stats ·
 quick-reference · commit-message · code-review · session-summary (which owns `/eod`, `/pickup`, `/state`).
 
-## Hooks — the things you would forget
+## Hooks — the one thing you would forget
 
-Skills are what you reach for. Hooks run regardless of what you or the model decide.
+Skills are what you reach for. A hook runs regardless of what you or the model decide. Only one
+control needs that here; `01-me` and `00-project-context` already cover session state and review
+habits without needing enforcement.
 
 | Hook | Event | Does |
 |---|---|---|
-| `session-start` | SessionStart | Injects the latest STATE.md entry. Replaces remembering `/state`. |
 | `credential-guard` | PreToolUse `Edit\|Write` | Blocks literal secrets and PEM private keys. |
-| `review-gate` | PreToolUse `Bash` (git commit) | One nudge to review, then silent for the session. |
-| `eod-reminder` | Stop | Uncommitted changes and no STATE.md entry today → reminds. |
 
 `credential-guard` replaces Continue's content-keyword `regex:` trigger on `11-security`. Continue
 could only inject advice; a hook denies the write. It matches value-shaped secrets — keyword plus
 assignment plus a 16-character value, or a PEM block — not bare keywords, which is what the
 `11-security` context rule is for.
+
+**Removed 2026-09-24** (Boris Cherny's rule: delete, use it, re-add only on repeat failure —
+none did): `session-start` (redundant with `00-project-context`), `review-gate` (reminder only,
+shipped two defects), `eod-reminder` (redundant with the `/eod` habit).
 
 ## Where things live — Notion vs this repo
 

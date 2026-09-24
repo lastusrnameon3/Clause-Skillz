@@ -1,16 +1,8 @@
 {
   "hooks": {
-    "SessionStart": [
-      { "hooks": [ { "type": "command", "command": "~/.claude/hooks/session-start.sh" } ] }
-    ],
     "PreToolUse": [
       { "matcher": "Edit|Write",
-        "hooks": [ { "type": "command", "command": "~/.claude/hooks/credential-guard.sh" } ] },
-      { "matcher": "Bash",
-        "hooks": [ { "type": "command", "if": "Bash(git commit *)", "command": "~/.claude/hooks/review-gate.sh" } ] }
-    ],
-    "Stop": [
-      { "hooks": [ { "type": "command", "command": "~/.claude/hooks/eod-reminder.sh" } ] }
+        "hooks": [ { "type": "command", "command": "~/.claude/hooks/credential-guard.sh" } ] }
     ]
   }
 }
