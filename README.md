@@ -49,6 +49,26 @@ jq --slurpfile r claude/settings.json '.hooks = $r[0].hooks' ~/.claude/settings.
 
 If a hook was removed from the repo, delete its script from `~/.claude/hooks/` too — `cp` doesn't remove files.
 
+### Work machine (Windows, managed settings)
+
+Rules and skills only. Managed settings block user-level hooks, so skip `hooks/` and `settings.json` — no `jq` needed. PowerShell:
+
+```powershell
+git clone https://github.com/lastusrnameon3/Clause-Skillz.git "$HOME\Codebase\Clause-Skillz"
+cd "$HOME\Codebase\Clause-Skillz"
+
+# keep Claude files out of every work repo — reuse an existing excludes file if one is set
+$ex = git config --global core.excludesfile
+if (-not $ex) { $ex = "$HOME\.gitignore_global"; git config --global core.excludesfile $ex }
+$have = if (Test-Path $ex) { Get-Content $ex } else { @() }
+'.claude/','CLAUDE.md','CLAUDE.local.md' | Where-Object { $_ -notin $have } | Add-Content $ex
+
+New-Item -ItemType Directory -Force "$HOME\.claude" | Out-Null
+Copy-Item -Recurse -Force .\claude\rules, .\claude\skills "$HOME\.claude"
+```
+
+Verify: `/context` lists the 5 universal rules (if not, managed settings restrict instruction sources — user rules won't load); `/skills` lists 6; `git check-ignore -v CLAUDE.md` in a work repo names the excludes file. Update: `git pull`, rerun the `Copy-Item` line. If GitHub is blocked, ask IT — don't carry the files in another way.
+
 Git Bash covers both lines on Windows.
 
 Verify: `/context` in any repo lists the five universal rules under **Memory files**. Open a `.ps1`
