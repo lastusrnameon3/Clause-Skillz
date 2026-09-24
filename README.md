@@ -33,11 +33,21 @@ git config --global core.excludesfile ~/.gitignore_global
 printf '.claude/\nCLAUDE.md\nCLAUDE.local.md\n' >> ~/.gitignore_global
 ```
 
-Then, on every update, copy the tree in:
+Then copy the tree in. **First install** (no `~/.claude/settings.json` yet):
 
 ```bash
 cp -r claude/rules claude/skills claude/hooks claude/settings.json ~/.claude/
 ```
+
+**Updates** — don't overwrite `settings.json`; it holds your own settings too. Swap only the `hooks` block:
+
+```bash
+cp -r claude/rules claude/skills claude/hooks ~/.claude/
+cp ~/.claude/settings.json ~/.claude/settings.json.bak
+jq --slurpfile r claude/settings.json '.hooks = $r[0].hooks' ~/.claude/settings.json.bak > ~/.claude/settings.json
+```
+
+If a hook was removed from the repo, delete its script from `~/.claude/hooks/` too — `cp` doesn't remove files.
 
 Git Bash covers both lines on Windows.
 
