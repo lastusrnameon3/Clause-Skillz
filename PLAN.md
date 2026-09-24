@@ -17,7 +17,7 @@ has not been set up, and **`credential-guard` has not been exercised live throug
 |---|---|---|
 | A — Migrate off Continue | **Done** | Continue EOL at 2.0.0. 13 rules converted `globs:` → `paths:`, 26 prompts → 6 skills, 4 hooks built, repo renamed to `Clause-Skillz`, subtree distribution retired. Slices 9–11. |
 | B — Mac install | **Done, partially verified** | Global excludes set, tree copied to `~/.claude/`. `/context` lists the 5 universal rules; `/skills` lists the 6. **Re-copy needed after Slice 12** so `~/.claude/` drops the 3 removed hooks. `credential-guard` unverified live. |
-| C — Corporate Windows machine | **Not started** | Clone, run the 2 README git-config lines in Git Bash, copy rules + skills to `%USERPROFILE%\.claude\`. Hooks won't run there: managed settings block user-level hooks, so `credential-guard` is advisory only at work. Decided 2026-09-24: no workaround. |
+| C — Corporate Windows machine | **Not started** | Follow README → *Work machine (Windows, managed settings)*: clone, set excludes, copy rules + skills only. First check: does `/context` show the 5 universal rules? Hooks won't run there: managed settings block user-level hooks, so `credential-guard` is advisory only at work. Decided 2026-09-24: no workaround. |
 | D — Notion why-only restructure | **Not started** | Domain pages still restate rule bodies. They should carry *why this exists* and *what was rejected*, then link to the file. §2 of the reconciliation doc. The largest remaining piece of work. |
 
 ## Decided, Not Yet Built
