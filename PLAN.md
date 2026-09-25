@@ -38,7 +38,7 @@ has not been set up, and **`credential-guard` has not been exercised live throug
 
 - **Team distribution.** Personal scope means non-scripting teammates get nothing. A deliberate tradeoff against the stated goal that they run this work — taken because whether `.claude/` is permitted in corporate repos is unanswered, and undisclosed tooling found in an MR is a worse conversation than not shipping one. Revisit only if tool approval is obtained.
 - **Rebuilding Continue.** `.continue/` stays archived and unmaintained. It is the only record of the prior design; it is not a fallback.
-- **Porting the 7 account skills into the repo.** `terse-mode`, `context-compress`, `usage-stats`, `quick-reference`, `commit-message`, `code-review`, `session-summary` already exist account-side. Duplicating them creates two copies to maintain. Revisit only if terminal use becomes primary.
+- **context-compress, usage-stats, ste in the repo.** Not needed in the terminal. (The rest of the old "account skills" list was ported 2026-09-25 — see Done.)
 
 ## Open Decisions
 
@@ -47,6 +47,7 @@ has not been set up, and **`credential-guard` has not been exercised live throug
 
 ## Done
 
+- **Slice 13 — terminal skills** (2026-09-25). Ported `terse-mode`, `quick-reference`, `commit-message`, `code-review`, `session-summary`, `project-init`, and new `architect-builder` (J.U.D.G.E. loop — had never been in the repo, so Claude Code never loaded it). Reason: account skills don't reach Claude Code at work (API-key / `apiKeyHelper` sessions don't sync). Repo is the one source; account copies are uploaded from it. `code-review` overrides the bundled one by name. `commit-message`/`code-review`/`context-compress` were never account skills — the old "already installed" claim was wrong.
 - **Audit A1 + Slice 12** (2026-09-24). Hooks 4 → 1, install scripts removed (2 README lines), `01-me`/`02-thinking` contradiction fixed, `00-project-context` template trimmed, dead files removed, session summary moved to Notion, project instructions block rewritten, repo git state repaired. Findings: Notion → Template System → Audit A1.
 - **Migration off Continue complete** (2026-09-17). 13 rules, 6 skills, 4 hooks, repo renamed, pushed.
 - **`17-documentation-ste.md` written and committed** (2026-09-10). Notion had described it as deployed since 2026-08-10; it had never existed.

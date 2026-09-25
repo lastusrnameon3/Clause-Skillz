@@ -106,12 +106,21 @@ Rules load from frontmatter. No manual invocation.
 | `/userdocs` | you | — |
 | `/jira` | you | — |
 | `/plainify` | you | names · comments · both |
+| `/code-review` | you | — (replaces bundled `/code-review`) |
+| `/commit-message` | you or Claude | — |
+| `/session-summary` | you or Claude | `/eod` · `/pickup` — employer work stays local |
+| `/project-init` | you or Claude | personal · code · employer |
+| `/architect-builder` | you or Claude | j · u · d · g · e · quick — the J.U.D.G.E. build loop |
+| `/terse-mode` | you or Claude | on · off |
+| `/quick-reference` | you or Claude | — |
 
-`security-review` is the only model-invocable skill: it should fire on its own when credential-shaped
-work appears. Everything else is a deliberate invocation.
+`security-review` fires on its own when credential-shaped work appears.
 
-Not rebuilt here — already installed as Claude skills: terse-mode · context-compress · usage-stats ·
-quick-reference · commit-message · code-review · session-summary (which owns `/eod`, `/pickup`, `/state`).
+**This repo is the one source for all 13.** Account skills (claude.ai) only reach Claude Code in
+sessions signed in with a claude.ai account; API-key / `apiKeyHelper` / Bedrock sessions — the
+usual setup at work — get none. So the skills needed in the terminal live here, and any account
+copy is uploaded from these files, not edited separately. Not ported: context-compress,
+usage-stats, ste (not needed in the terminal).
 
 ## Hooks — the one thing you would forget
 

@@ -22,7 +22,7 @@ Rules and hooks need no action. **Only skills are typed.**
 
 | File | Does |
 |---|---|
-| `00-project-context` | Reads `STATE.md`; holds the per-project template stub |
+| `00-project-context` | Reads `STATE.md` before responding |
 | `01-me` | Audit before proposing · simpler option first · direct feedback, no praise-padding |
 | `02-thinking` | Challenge before building · no ties · record what was rejected |
 | `03-writing` | README standard + session summary format |
@@ -46,35 +46,41 @@ Open a `.ps1` → `10-code` and `11-security` attach. Open `README.md` → `12-g
 
 ---
 
-## Skills — 6, typed
+## Skills — 13, typed
 
 ```
 /review-lens <lens>     infra · teamlead · architect · blindspot · sidebiz · community
 /challenge <mode>       challenge · premortem · steelman · tradeoff · breakit
 /security-review        also self-invokes on credential-shaped work
+/code-review            one line per finding, severity prefixes — replaces the bundled /code-review
+/commit-message         Conventional Commits from the diff — writes only, never commits
 /userdocs               README from the 03-writing standard
 /jira                   card blocks from session work
 /plainify <mode>        names · comments · both
+/session-summary        /eod writes today's summary, /pickup resumes — employer work stays local
+/project-init           scaffold a project: personal, code, or employer
+/architect-builder <j|u|d|g|e|quick>   slice spec → build → fresh-context judge → you decide
+/terse-mode             compressed replies; "normal mode" turns it off
+/quick-reference        this list, in-session
 ```
 
 No argument on `review-lens` or `challenge` → it lists the lenses and stops.
 
-**Account skills** (installed separately, available everywhere):
-`/terse-mode` · `/session-summary` · `/quick-reference` · `/code-review` · `/commit-message` ·
-`/context-compress` · `/usage-stats` · `/ste`
-
-`/session-summary` owns what used to be `/eod`, `/pickup`, and `/state`.
+**These 13 live in this repo — it's their one source.** Account skills (claude.ai) reach Claude Code
+only when you sign in with a claude.ai account; they land in `~/.claude/skills/synced/` and run as
+`/anthropic-skills:<name>` when a local skill has the same name. API-key, `apiKeyHelper`, and
+Bedrock sessions — typical at work — get none, which is why these are here.
 
 ---
 
-## Hooks — 4, automatic
+## Hook — 1, automatic (Mac only)
 
 | Hook | Event | Behavior |
 |---|---|---|
-| `session-start` | SessionStart | Injects the latest `STATE.md` entry. Replaces remembering `/state`. |
 | `credential-guard` | PreToolUse `Edit\|Write` | **Denies** a write containing a literal secret or PEM private key |
-| `review-gate` | PreToolUse `Bash` (git commit) | Denies the first commit of a session with "run a review first"; re-run to proceed. Once per session. |
-| `eod-reminder` | Stop | Uncommitted changes and no `STATE.md` entry today → reminds |
+
+At work, managed settings block user-level hooks — `credential-guard` does not run there.
+`session-start`, `review-gate`, `eod-reminder` were retired 2026-09-24 (duplicated a rule or a habit).
 
 `credential-guard` matches **value-shaped** secrets — keyword + assignment + 16-char value, or a PEM
 block. Not bare keywords: `# never log the password`, `Get-Credential`, and `$env:VAULT_TOKEN` all
@@ -94,7 +100,7 @@ pass. Bare-keyword context is what `11-security` is for.
 | `/frank-infra` … `/frank-sidebiz` | `/review-lens <lens>` |
 | `/challenge` `/premortem` `/steelman` `/tradeoff` `/breakit` | `/challenge <mode>` |
 | `/simplify` `/comment` | `/plainify <mode>` |
-| `/eod` `/pickup` `/state` | `/session-summary` + `session-start` hook |
+| `/eod` `/pickup` `/state` | `/session-summary` (`00-project-context` reads `STATE.md`) |
 | `/help` | `/skills` (built in) |
 | `config.yaml` personas | `/review-lens`, `/challenge` |
 | `git subtree` distribution | none — copy to `~/.claude/` per machine |
@@ -114,7 +120,7 @@ Smoke test after install, in any repo:
 
 1. `/context` → 5 universal rules under **Memory files**
 2. Open a `.ps1` → `/context` again → `10-code` now listed
-3. `/skills` → all 6 present
+3. `/skills` → all 13 present
 
 If a rule is missing from `/context`, it did not load. Check the frontmatter parses and the file is
 in `~/.claude/rules/`.
@@ -123,19 +129,9 @@ in `~/.claude/rules/`.
 
 ## Install / update
 
-```bash
-cd ~/Codebase/Clause-Skillz
-git pull
-./scripts/Setup-Machine.sh                                    # once per machine
-cp -r claude/rules claude/skills claude/hooks claude/settings.json ~/.claude/
-```
-
-Windows: `.\scripts\Setup-Machine.ps1` (supports `-WhatIf`), then copy to `$env:USERPROFILE\.claude\`.
-
-`Setup-Machine` sets `core.excludesfile` so `.claude/`, `CLAUDE.md`, and `CLAUDE.local.md` are ignored
-in every repo — no committed `.gitignore` entry, which would itself disclose the tooling. Idempotent.
-
-Hooks need `jq` and bash. Git Bash covers both on Windows.
+See README → *Install*. Mac: rules + skills + hook, merging only the `hooks` block into
+`settings.json`. Work (Windows): rules + skills only. Both set `core.excludesfile` so `.claude/`,
+`CLAUDE.md`, and `CLAUDE.local.md` never enter a repo.
 
 ---
 

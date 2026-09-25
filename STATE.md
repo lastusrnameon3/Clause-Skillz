@@ -237,3 +237,28 @@ path — the same class of gap as the subtree prefix bug, which also went unexer
 
 ### Next Slice Queued
 - Live-fire `credential-guard` on the Mac; confirm `/hooks` shows only the one hook.
+
+---
+
+## 2026-09-25 — Slice 13: skills the terminal actually needs
+
+### Built
+- `claude/skills/`: `terse-mode`, `quick-reference` (rewritten for this repo), `commit-message`, `code-review` (from archived `.continue/prompts/`), `session-summary`, `project-init` (employer-aware versions, de-identified), and new `architect-builder` (J.U.D.G.E. loop, judge as fresh-context subagent). 13 skills total.
+- README, CHEATSHEET: skill tables, one-source note; CHEATSHEET's stale hooks table, Setup-Machine install and "account skills available everywhere" line fixed.
+
+### Decisions + Reason
+- **Reversed "don't port account skills".** Its own revisit trigger fired: at work the terminal is primary, and account skills only sync to Claude Code in claude.ai-signed-in sessions — not API-key / `apiKeyHelper` / Bedrock ones.
+- **Repo is the one source** for these; account copies are uploaded from the repo files. On a signed-in Mac both exist — local wins the short name, synced runs as `/anthropic-skills:<name>`.
+- **`architect-builder` as a skill, not a rule** — a multi-step procedure needed only for build work; Anthropic's guidance puts those in skills so they don't load every session.
+- **`code-review` overrides the bundled `/code-review`** — the severity grammar and audit/ops override are why it exists.
+- **Not ported:** context-compress, usage-stats, ste.
+
+### Verified
+- All 13 SKILL.md files start with `---` frontmatter; no personal names in ported files.
+- Not yet verified on either machine — `/skills` after copy.
+
+### Unresolved
+- Work machine: skills present in `%USERPROFILE%\.claude\skills` but not loading in VS Code — diagnosing.
+
+### Next Slice Queued
+- Verify `/skills` shows 13 on the Mac and at work.
