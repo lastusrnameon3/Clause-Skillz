@@ -17,7 +17,7 @@ has not been set up, and **`credential-guard` has not been exercised live throug
 |---|---|---|
 | A — Migrate off Continue | **Done** | Continue EOL at 2.0.0. 13 rules converted `globs:` → `paths:`, 26 prompts → 6 skills, 4 hooks built, repo renamed to `Clause-Skillz`, subtree distribution retired. Slices 9–11. |
 | B — Mac install | **Done, partially verified** | Global excludes set, tree copied to `~/.claude/`. `/context` lists the 5 universal rules; `/skills` lists the 6. **Re-copy needed after Slice 12** so `~/.claude/` drops the 3 removed hooks. `credential-guard` unverified live. |
-| C — Corporate Windows machine | **Not started** | Follow README → *Work machine (Windows, managed settings)*: clone, set excludes, copy rules + skills only. First check: does `/context` show the 5 universal rules? Hooks won't run there: managed settings block user-level hooks, so `credential-guard` is advisory only at work. Decided 2026-09-24: no workaround. |
+| C — Corporate Windows machine | **In progress** | Follow README → *Work machine (Windows, managed settings)*: clone, set excludes, copy rules + skills only. First check: does `/context` show the 5 universal rules? Hooks won't run there: managed settings block user-level hooks, so `credential-guard` is advisory only at work. Decided 2026-09-24: no workaround. **Found 2026-09-25:** skills land correctly but don't load — managed settings restrict customization (`allowManagedPluginsOnly`, `disableSkillShellExecution`, `disableCustomSkillsCode`). Skills at work need IT to ship them as a managed plugin. No workaround that relabels skills as rules. |
 | D — Notion why-only restructure | **Not started** | Domain pages still restate rule bodies. They should carry *why this exists* and *what was rejected*, then link to the file. §2 of the reconciliation doc. The largest remaining piece of work. |
 
 ## Decided, Not Yet Built
@@ -28,7 +28,7 @@ has not been set up, and **`credential-guard` has not been exercised live throug
 ## Items for Later
 
 - Move `.continue/` to `archive/continue-v2.0.0/` so the repo root is unambiguous. Cosmetic.
-- Split `03-writing`: roughly half is the session-summary format, which only matters at `/eod`. Moving that half into the session-summary skill trims always-on context with no behavior loss. (Audit A1 finding M2 — compare against the skill's format first.)
+- ~~Split `03-writing`~~ — **keep as is (2026-09-25).** Skills don't load at work, so the session-summary format in `03-writing` is how `/eod`-style summaries work there. Reverses Audit A1 M2.
 - Test `paths: ["**/README.md"]` for the README standard in `03-writing` (Audit A1 M3). Risk: path rules fire on read, so a brand-new README may not trigger it.
 - Quarterly audit of this repo against current Anthropic docs — next due ~2026-12.
 - Publish more of the six skills to the account if desktop-app use grows. Three are published (`challenge`, `review-lens`, `jira`); `security-review`, `userdocs` and `plainify` were held back as repo-and-terminal work.
