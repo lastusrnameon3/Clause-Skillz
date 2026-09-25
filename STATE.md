@@ -258,7 +258,8 @@ path — the same class of gap as the subtree prefix bug, which also went unexer
 - Not yet verified on either machine — `/skills` after copy.
 
 ### Unresolved
-- Work machine: skills present in `%USERPROFILE%\.claude\skills` but not loading in VS Code — diagnosing.
+- ~~Work machine skills not loading~~ — **resolved without a known cause** (2026-09-25). First not loading; later all 13 visible in TUI and VS Code with no deliberate change. Managed settings present: `allowManagedPluginsOnly`, `disableSkillShellExecution`, `disableCustomSkillsCode`. If it breaks again, start there.
+- **`on` vs `user-only`** in the TUI is `disable-model-invocation`: 6 skills are user-only by design (review-lens, challenge, code-review, userdocs, jira, plainify); the other 7 are callable by both you and Claude.
 
 ### Next Slice Queued
-- Verify `/skills` shows 13 on the Mac and at work.
+- Verify `/skills` shows 13 on the Mac. (Work: done.)
